@@ -21,12 +21,7 @@
  .dl-blurbs {
 	 display: grid;
 }
- @media (min-width: 768px) {
-	 .dl-blurbs {
-		 grid-template-columns: repeat(2, 1fr);
-		 gap: 2vw;
-	}
-}
+
 /* LIST */
  dl {
 	 counter-reset: count;
