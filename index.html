@@ -24,7 +24,12 @@
           <div class="apuntarme">
             <span class="ti-check-box"></span>
             <a href="#" data-id="1" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
-            <input type="text" placeholder="nombre" class="no_visible">
+            <form class="no_visible">
+              <input type="text" placeholder=" " />
+              <button>
+                <span class="ti-check"></span>
+              </button>
+            </form>
           </div>
         </dd>
         <dt>Febrero - <span class="number_of_activities">1 actividad planificada</span></dt>
@@ -86,13 +91,25 @@
       </dl>
     </section>
     <script>
-      const buttons = document.querySelectorAll(".apuntame");
+
+      const buttons = document.querySelectorAll("button");
       buttons.forEach((button) => {
         button.addEventListener("click", (event) => {
-          const numeroAsistentes = parseInt(event.target.querySelector(".numero_asistentes").getInnerHTML());
-          event.target.querySelector(".numero_asistentes").setHTML(numeroAsistentes+1)
-          event.target.parentElement.querySelector("input").classList = "visible";
-          event.target.classList = "no_visible";
+          event.preventDefault();
+          const numAsistentes = event.target.parentElement.parentElement.parentElement.querySelector(".numero_asistentes");
+          const numeroAsistentes = parseInt(numAsistentes.getInnerHTML());
+          numAsistentes.setHTML(numeroAsistentes+1);
+          event.target.parentElement.parentElement.classList = "no_visible";
+          event.target.parentElement.parentElement.reset();
+        });
+      });
+
+      const buttonApuntame = document.querySelectorAll(".apuntame");
+      buttonApuntame.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          /*const numeroAsistentes = parseInt(event.target.querySelector(".numero_asistentes").getInnerHTML());
+          event.target.querySelector(".numero_asistentes").setHTML(numeroAsistentes+1);*/
+          event.target.parentElement.querySelector("form").classList = "visible";
         });
       });
 
@@ -138,7 +155,7 @@
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const database = getDatabase(app);
-      console.log(database);
+
       set(ref(database, "salidas_domingo/Enero"), {
         id: "1",
         titulo: "Sasiburu - Senderos Pulmón - Gorostiza XC",
