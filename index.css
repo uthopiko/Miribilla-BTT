@@ -1,20 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
-/*- Screen Sizes*/
-/* COLOR HEX */
-/* COLOR Gradient */
-/*import fonts*/
-/*media queries*/
-html {
-  box-sizing: border-box;
-}
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
+
+
 body {
-  background-color: #121111;
   font-family: "Montserrat", sans-serif;
   font-size: 0.875em;
   color: rgb(129, 122, 122);
@@ -27,11 +15,6 @@ body {
 /* LIST */
 dl {
   counter-reset: count;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.04) 20%,
-    rgba(255, 255, 255, 0) 0%
-  );
   padding-left: 4vw;
   padding-right: 4vw;
   margin: 0;
@@ -47,24 +30,14 @@ dl {
     padding-bottom: 3vw;
   }
 }
-dl + dl {
-  counter-reset: counter 4;
-}
+
 dt {
-  counter-increment: count;
   color: #4f6d7a ff;
   font-family: "Montserrat", sans-serif;
   font-size: 3vw;
   text-transform: uppercase;
 }
-dt::before {
-  content: counter(count, decimal-leading-zero) ".";
-  font-family: "Abril Fatface", cursive;
-  color: #5ea5b8 ff;
-  margin-left: -1vw;
-  padding-right: 12px;
-  color: rgb(198, 21, 21);
-}
+
 dd {
   margin-left: 5vw;
   margin-bottom: 0.5vh;
@@ -83,7 +56,8 @@ dd {
 }
 
 .title {
-  font-size: 4vw;
+  color: #7a4f4f;
+  font: 700 18px/22px "Sarala", sans-serif;
 }
 
 .miribilla_color {
@@ -96,4 +70,47 @@ dd {
 
 .no_visible {
 	display: none;
+}
+
+.number_of_activities {
+  font-size: 2vw;
+  font: 400 16px/24px "Open Sans", sans-serif;
+}
+
+.fecha {
+  color: #999999;
+  display: inline-block;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+}
+
+.descripcion {
+  color: #999999;
+  font: 400 13px/16px "Open Sans", sans-serif;
+}
+
+[class^="ti-"] {
+  padding-right: 8px;
+}
+
+a {
+  color: #999999;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.links {
+  margin-bottom: 30px;
+}
+dt {
+    /* background: #fafbff; */
+    padding: 24px;
+    border: 0;
+    position: relative;
+    /* border-top: 1px solid #eee; */
+    background-color: #cf2e2e;
+    border-radius: 10px 10px 0 0;
+    color: white;
+    font: 400 28px/32px "Abril Fatface", cursive;
+    margin-bottom: 15px;
 }

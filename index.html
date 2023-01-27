@@ -1,50 +1,48 @@
 <html>
   <head>
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="themify-icons.css" />
   </head>
 
   <body>
-    <div class="title">
-      SALIDAS 2023 - <span class="miribilla_color">MIRIBILLA BTT</span>
-    </div>
-    <ul class="tabs">
-      <li data-id="salidas-dominicales">Salidas dominicales</li>
-      <li data-id="salidas-planificadas">Salidas planificadas</li>
-      <li data-id="salidas-propuestas">Salidas propuestas</li>
-    </ul>
-    <section class="dl-blurbs" id="salidas-dominicales" class="visible">
+    <section class="dl-blurbs" id="salidas-dominicales" class="visible accordion">
       <dl>
-        <dt>Enero</dt>
-        <dd>29/01/2023</dd>
-        <dd>Sasiburu - Senderos Pulmón - Gorostiza XC</dd>
-        <dd>Almuerzo en el regato</dd>
-        <dd>
+        <dt>Enero - <span class="number_of_activities">1 actividad planificada</span></dt>
+        <dd class="fecha"><span class="ti-timer"></span>29/01/2023 - 09:00 Zorroza</dd>
+        <dd class="title">Sasiburu - Senderos Pulmón - Gorostiza XC</dd>
+        <dd class="descripcion">Almuerzo en el regato</dd>
+        <dd class="descripcion"> 
           Subiremos por Sasiburu hasta el cruce de Saratxo y de ahi para la zona
           del Tojo, donde haremos los 6 km de bajada de la pulmón hasta el
           regato. El que quiera puede jugar un rato en el circuito de Gorostiza.
           Ruta sencilla pero muy divertida
         </dd>
         <dd>47 km / 1100 m</dd>
-        <dd>
-          <a href="https://www.strava.com/routes/3050353739471458302?v2=true"
-            >Enlace a ruta</a
+        <dd class="links">
+          <span class="ti-map-alt"></span><a href="https://www.strava.com/routes/3050353739471458302?v2=true">Ruta</a
           >
+          <div class="apuntarme">
+            <span class="ti-check-box"></span>
+            <a href="#" data-id="1" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+            <input type="text" placeholder="nombre" class="no_visible">
+          </div>
         </dd>
-        <dt>Febrero</dt>
-        <dd>25/02/2023</dd>
-        <dd>Oro - Cresta Zamaia - Pagasarri</dd>
-        <dd>Almuerzo en el albergue de Somo, antes del Zamaia</dd>
-        <dd>
+        <dt>Febrero - <span class="number_of_activities">1 actividad planificada</span></dt>
+        <dd class="fecha"><span class="ti-timer"></span>25/02/2023 - 09:00 Miribilla</dd>
+        <dd class="title">Oro - Cresta Zamaia - Pagasarri</dd>
+        <dd class="descripcion">Almuerzo en el albergue de Somo, antes del Zamaia</dd>
+        <dd class="descripcion"> 
           Conocemos la zona, asi que la ruta sera a concretar, pero la idea es
           hacer la cresta del Zamaia, Gongeda y bajar por los senderos del
           ganeko a la pista, para acercanos al paga por el sendero luminoso, a
           partir de ahi o bajar, o seguir con la Raul o a casa.
         </dd>
-        <dd>40 km / 1200 m</dd>
-        <dd>
-          <a href="https://www.strava.com/routes/3050362638518786046?v2=true"
-            >Enlace a ruta</a
+        <dd>40 km / 1100 m</dd>
+        <dd class="links">
+          <span class="ti-map-alt"></span><a href="https://www.strava.com/routes/3050362638518786046?v2=true">Ruta</a
           >
+          <span class="ti-check-box"></span><a href="#" data-id="1" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+        </dd>
         </dd>
         <dt>Marzo</dt>
         <dd>26/03/2023</dd>
@@ -84,10 +82,20 @@
         <dt>Vuelta a Anboto</dt>
         <dd>Marzo aproximadamente</dd>
         <dd>Vuelta a Anboto</dd>
-        <dd>Alubiada preparada por Marmi en su txoko </dd>
+        <dd>Alubiada preparada por Marmi en su txoko</dd>
       </dl>
     </section>
     <script>
+      const buttons = document.querySelectorAll(".apuntame");
+      buttons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          const numeroAsistentes = parseInt(event.target.querySelector(".numero_asistentes").getInnerHTML());
+          event.target.querySelector(".numero_asistentes").setHTML(numeroAsistentes+1)
+          event.target.parentElement.querySelector("input").classList = "visible";
+          event.target.classList = "no_visible";
+        });
+      });
+
       const links = document.querySelectorAll("li");
       links.forEach((link) => {
         link.addEventListener("click", (event) => {
@@ -102,6 +110,63 @@
           });
         });
       });
+    </script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+      } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
+
+      // TODO: Add SDKs for Firebase products that you want to use1
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDmIzzkiWaoBA3lds7WtwZ7agmOOcbUvKI",
+        authDomain: "miribilla-btt.firebaseapp.com",
+        databaseURL:
+          "https://miribilla-btt-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "miribilla-btt",
+        storageBucket: "miribilla-btt.appspot.com",
+        messagingSenderId: "62295771452",
+        appId: "1:62295771452:web:721326eb5bca68e1647639",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      console.log(database);
+      set(ref(database, "salidas_domingo/Enero"), {
+        id: "1",
+        titulo: "Sasiburu - Senderos Pulmón - Gorostiza XC",
+        fecha: "29/01/2023",
+        descripcion: `Subiremos por Sasiburu hasta el cruce de Saratxo y de ahi para la zona
+          del Tojo, donde haremos los 6 km de bajada de la pulmón hasta el
+          regato. El que quiera puede jugar un rato en el circuito de Gorostiza.
+          Ruta sencilla pero muy divertida`,
+        almuerzo: "Bar Txikia - El Regato",
+        asistentes: [],
+        enlace: "https://www.strava.com/routes/3050353739471458302?v2=true",
+      });
+      set(ref(database, "salidas_domingo/Febrero"), {
+        id: "2",
+        titulo: "Oro - Cresta Zamaia - Pagasarri",
+        fecha: "25/02/2023",
+        descripcion: `Conocemos la zona, asi que la ruta sera a concretar, pero la idea es
+          hacer la cresta del Zamaia, Gongeda y bajar por los senderos del
+          ganeko a la pista, para acercanos al paga por el sendero luminoso, a
+          partir de ahi o bajar, o seguir con la Raul o a casa`,
+        almuerzo: "Albergue Somo - Subida al oro",
+        asistentes: [],
+        enlace: "https://www.strava.com/routes/3050362638518786046?v2=true",
+      });
+      /*let refToData = database.ref();
+      dataRef.once("value", (snapshot) => {
+        console.log(snapshot.val());
+      });*/
     </script>
   </body>
 </html>
