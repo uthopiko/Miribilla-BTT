@@ -22,10 +22,6 @@ dl {
   dl {
     padding-left: 2vw;
   }
-
-  body {
-    background-color: red;
-  }
 }
 @media (min-width: 1024px) {
   dl {
