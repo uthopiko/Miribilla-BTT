@@ -8,8 +8,9 @@
   <body>
     <section class="dl-blurbs" id="salidas-dominicales" class="visible accordion">
       <dl>
-        <dt>Enero - <span class="number_of_activities">1 actividad planificada</span></dt>
-        <dd class="fecha"><span class="ti-timer"></span>29/01/2023 - 09:00 Zorroza</dd>
+        <dt>Enero - <span class="number_of_activities">0 actividad planificadas</span></dt>
+        <dt>Febrero - <span class="number_of_activities">2 actividad planificada</span></dt>
+        <dd class="fecha"><span class="ti-timer"></span>04/02/2023 - 09:00 Zorroza (Aplazada desde Enero)</dd>
         <dd class="title">Sasiburu - Senderos Pulmón - Gorostiza XC</dd>
         <dd class="descripcion">Almuerzo en el regato</dd>
         <dd class="descripcion"> 
@@ -33,7 +34,6 @@
             </form>
           </div>
         </dd>
-        <dt>Febrero - <span class="number_of_activities">1 actividad planificada</span></dt>
         <dd class="fecha"><span class="ti-timer"></span>25/02/2023 - 09:00 Miribilla</dd>
         <dd class="title">Oro - Cresta Zamaia - Pagasarri</dd>
         <dd class="descripcion">Almuerzo en el albergue de Somo, antes del Zamaia</dd>
@@ -47,8 +47,16 @@
         <dd class="links">
           <span class="ti-map-alt"></span><a href="https://www.strava.com/routes/3050362638518786046?v2=true">Ruta</a
           >
-          <span class="ti-check-box"></span><a href="#" data-id="1" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
-        </dd>
+          <div class="apuntarme">
+            <span class="ti-check-box"></span>
+            <a href="#" data-id="2" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+            <form class="no_visible">
+              <input type="text" placeholder=" " />
+              <button>
+                <span class="ti-check"></span>
+              </button>
+            </form>
+          </div>        </dd>
         </dd>
         <dt>Marzo</dt>
         <dd>26/03/2023</dd>
@@ -91,35 +99,16 @@
         <dd>Alubiada preparada por Marmi en su txoko</dd>
       </dl>
     </section>
-    <script>
-
-      const buttons = document.querySelectorAll("button");
-      buttons.forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.preventDefault();
-          const form = event.target.parentElement.parentElement;
-          const numAsistentes = event.target.parentElement.parentElement.parentElement.querySelector(".numero_asistentes");
-          const numeroAsistentes = parseInt(numAsistentes.getInnerHTML());
-          numAsistentes.setHTML(numeroAsistentes+1);
-          form.classList = "no_visible";
-          form.reset();
-        });
-      });
-
-      const buttonApuntame = document.querySelectorAll(".apuntame");
-      buttonApuntame.forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.target.parentElement.querySelector("form").classList = "visible";
-        });
-      });
-    </script>
     <script type="module">
+
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js";
       import {
         getDatabase,
         ref,
         set,
+        onValue,
+        push
       } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
 
       // TODO: Add SDKs for Firebase products that you want to use1
@@ -141,29 +130,36 @@
       const app = initializeApp(firebaseConfig);
       const database = getDatabase(app);
 
-      set(ref(database, "salidas_domingo/Enero"), {
-        id: "1",
-        titulo: "Sasiburu - Senderos Pulmón - Gorostiza XC",
-        fecha: "29/01/2023",
-        descripcion: `Subiremos por Sasiburu hasta el cruce de Saratxo y de ahi para la zona
-          del Tojo, donde haremos los 6 km de bajada de la pulmón hasta el
-          regato. El que quiera puede jugar un rato en el circuito de Gorostiza.
-          Ruta sencilla pero muy divertida`,
-        almuerzo: "Bar Txikia - El Regato",
-        asistentes: [],
-        enlace: "https://www.strava.com/routes/3050353739471458302?v2=true",
+      const buttons = document.querySelectorAll("button");
+      buttons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          const form = event.target.parentElement.parentElement;
+          const apuntarme = event.target.parentElement.parentElement.parentElement;
+          const inputValue = form.querySelector("input").value;
+          const numAsistentes = apuntarme.querySelector(".numero_asistentes");
+          const numeroAsistentes = parseInt(numAsistentes.getInnerHTML());
+          numAsistentes.setHTML(numeroAsistentes+1);
+          form.classList = "no_visible";
+          form.reset();
+          push(ref(database, "salidas_domingo/"), {
+            id: apuntarme.querySelector("a").dataset.id,
+            asistentes: [inputValue]
+          });
+        });
       });
-      set(ref(database, "salidas_domingo/Febrero"), {
-        id: "2",
-        titulo: "Oro - Cresta Zamaia - Pagasarri",
-        fecha: "25/02/2023",
-        descripcion: `Conocemos la zona, asi que la ruta sera a concretar, pero la idea es
-          hacer la cresta del Zamaia, Gongeda y bajar por los senderos del
-          ganeko a la pista, para acercanos al paga por el sendero luminoso, a
-          partir de ahi o bajar, o seguir con la Raul o a casa`,
-        almuerzo: "Albergue Somo - Subida al oro",
-        asistentes: [],
-        enlace: "https://www.strava.com/routes/3050362638518786046?v2=true",
+
+      const buttonApuntame = document.querySelectorAll(".apuntame");
+      buttonApuntame.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.target.parentElement.querySelector("form").classList = "visible";
+        });
+      });
+    
+      const starCountRef = ref(database, 'salidas_domingo/');
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
       });
       /*let refToData = database.ref();
       dataRef.once("value", (snapshot) => {

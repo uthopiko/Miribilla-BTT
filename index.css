@@ -23,6 +23,7 @@ dl {
     padding-left: 2vw;
   }
 }
+
 @media (min-width: 1024px) {
   dl {
     padding-top: 3vw;
@@ -34,6 +35,22 @@ dl {
   form {
     display: block;
   }
+
+  dt {
+    font: 400 18px/28px "Abril Fatface", cursive !important;
+  }
+
+  body {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1em;
+    color: rgb(129, 122, 122);
+    line-height: 1.5;
+  }
+
+  form {
+    height: 30px;
+  }
+  
 }
 
 dt {
@@ -78,7 +95,6 @@ dd {
 }
 
 .number_of_activities {
-  font-size: 2vw;
   font: 400 16px/24px "Open Sans", sans-serif;
 }
 
