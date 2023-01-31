@@ -56,9 +56,29 @@
                 <span class="ti-check"></span>
               </button>
             </form>
-          </div>        </dd>
+          </div>        
         </dd>
-        <dt>Marzo</dt>
+        <dt>Marzo - 1 Actividad planificada</dt>
+        <dd class="fecha"><span class="ti-timer"></span>18/03/2023 - 09:00 Arrazola</dd>
+        <dd class="title">Vuelta a Anboto</dd>
+        <dd class="descripcion">Almuerzo en el txoko de Marmi (Hay duchas)</dd>
+        <dd class="descripcion"> 
+          Vuelta a Anboto, ruta preparada por Paul, para todos los publicos para hacer hambre ;)
+        </dd>
+        <dd>Por definir distancia y desnivel</dd>
+        <dd class="links">
+          <span class="ti-map-alt"></span>Por definir
+          <div class="apuntarme">
+            <span class="ti-check-box"></span>
+            <a href="#" data-id="2" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+            <form class="no_visible">
+              <input type="text" placeholder=" " />
+              <button>
+                <span class="ti-check"></span>
+              </button>
+            </form>
+          </div>        
+        </dd>
         <dd>26/03/2023</dd>
         <dd>Proximamente</dd>
         <dt>Abril</dt>
@@ -152,6 +172,7 @@
       const buttonApuntame = document.querySelectorAll(".apuntame");
       buttonApuntame.forEach((button) => {
         button.addEventListener("click", (event) => {
+          event.preventDefault();
           event.target.parentElement.querySelector("form").classList = "visible";
         });
       });
