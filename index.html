@@ -177,6 +177,9 @@
         const data = snapshot.val();
         events = data || [];
         events.forEach(d => {
+          console.log(d.id);
+          console.log(`span[data-id="${d.id}"]`);
+          console.log(document.querySelector(`span[data-id="${d.id}"]`));
           document.querySelector(`span[data-id="${d.id}"]`).setHTML(d.asistentes.length);
         });
       });
