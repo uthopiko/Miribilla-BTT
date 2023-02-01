@@ -25,7 +25,7 @@
           >
           <div class="apuntarme">
             <span class="ti-check-box"></span>
-            <a href="#" data-id="1" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+            <a href="#" data-id="1" class="apuntame">Apuntarme (<span class="numero_asistentes" data-id="1">0</span> apuntados)</a>
             <form class="no_visible">
               <input type="text" placeholder=" " />
               <button>
@@ -49,7 +49,7 @@
           >
           <div class="apuntarme">
             <span class="ti-check-box"></span>
-            <a href="#" data-id="2" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+            <a href="#" data-id="2" class="apuntame">Apuntarme (<span class="numero_asistentes" data-id="2">0</span> apuntados)</a>
             <form class="no_visible">
               <input type="text" placeholder=" " />
               <button>
@@ -70,7 +70,7 @@
           <span class="ti-map-alt"></span>Por definir
           <div class="apuntarme">
             <span class="ti-check-box"></span>
-            <a href="#" data-id="2" class="apuntame">Apuntarme (<span class="numero_asistentes">0</span> apuntados)</a>
+            <a href="#" data-id="3" class="apuntame">Apuntarme (<span class="numero_asistentes" data-id="3">0</span> apuntados)</a>
             <form class="no_visible">
               <input type="text" placeholder=" " />
               <button>
@@ -110,15 +110,6 @@
         <dd>Proximamente</dd>
       </dl>
     </section>
-    <section id="salidas-planificadas" class="no_visible">planificadas</section>
-    <section id="salidas-propuestas" class="no_visible">
-      <dl>
-        <dt>Vuelta a Anboto</dt>
-        <dd>Marzo aproximadamente</dd>
-        <dd>Vuelta a Anboto</dd>
-        <dd>Alubiada preparada por Marmi en su txoko</dd>
-      </dl>
-    </section>
     <script type="module">
 
       // Import the functions you need from the SDKs you need
@@ -153,12 +144,9 @@
       buttons.forEach((button) => {
         button.addEventListener("click", (onClickEvent) => {
           onClickEvent.preventDefault();
-          const form = onClickEvent.target.parentElement.parentElement;
-          const apuntarme = onClickEvent.target.parentElement.parentElement.parentElement;
+          const form = onClickEvent.target.closest("form");
+          const apuntarme = onClickEvent.target.closest(".apuntarme");
           const inputValue = form.querySelector("input").value;
-          const numAsistentes = apuntarme.querySelector(".numero_asistentes");
-          const numeroAsistentes = parseInt(numAsistentes.getInnerHTML());
-          numAsistentes.setHTML(numeroAsistentes+1);
           form.classList = "no_visible";
           form.reset();
           const id = apuntarme.querySelector("a").dataset.id;
@@ -189,7 +177,9 @@
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
         events = data;
-        console.log(data);
+        data.forEach(d => {
+          document.querySelector(`span[data-id="${d.id}"]`).setHTML(d.asistentes.length);
+        });
       });
     </script>
   </body>
