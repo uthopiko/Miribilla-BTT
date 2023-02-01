@@ -130,9 +130,8 @@
         onValue,
         push
       } from "https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js";
-
-      // TODO: Add SDKs for Firebase products that you want to use1
-      // https://firebase.google.com/docs/web/setup#available-libraries
+      
+      let events = [];
 
       // Your web app's Firebase configuration
       const firebaseConfig = {
@@ -152,20 +151,29 @@
 
       const buttons = document.querySelectorAll("button");
       buttons.forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.preventDefault();
-          const form = event.target.parentElement.parentElement;
-          const apuntarme = event.target.parentElement.parentElement.parentElement;
+        button.addEventListener("click", (onClickEvent) => {
+          onClickEvent.preventDefault();
+          const form = onClickEvent.target.parentElement.parentElement;
+          const apuntarme = onClickEvent.target.parentElement.parentElement.parentElement;
           const inputValue = form.querySelector("input").value;
           const numAsistentes = apuntarme.querySelector(".numero_asistentes");
           const numeroAsistentes = parseInt(numAsistentes.getInnerHTML());
           numAsistentes.setHTML(numeroAsistentes+1);
           form.classList = "no_visible";
           form.reset();
-          push(ref(database, "salidas_domingo/"), {
-            id: apuntarme.querySelector("a").dataset.id,
-            asistentes: [inputValue]
-          });
+          const id = apuntarme.querySelector("a").dataset.id;
+          let event = events.find(event => event.id === id);
+          if (event) {
+            console.log(event.asistentes);
+            event.asistentes.push(inputValue);
+          } else {
+            event =  {
+              id: id,
+              asistentes: [inputValue]
+            }
+          }
+        
+          set(ref(database, "salidas_domingo/"), [...events.filter(event => event.id !== id), event]);
         });
       });
 
@@ -180,12 +188,9 @@
       const starCountRef = ref(database, 'salidas_domingo/');
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
+        events = data;
         console.log(data);
       });
-      /*let refToData = database.ref();
-      dataRef.once("value", (snapshot) => {
-        console.log(snapshot.val());
-      });*/
     </script>
   </body>
 </html>
