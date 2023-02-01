@@ -152,7 +152,6 @@
           const id = apuntarme.querySelector("a").dataset.id;
           let event = events.find(event => event.id === id);
           if (event) {
-            console.log(event.asistentes);
             event.asistentes.push(inputValue);
           } else {
             event =  {
@@ -173,8 +172,8 @@
         });
       });
     
-      const starCountRef = ref(database, 'salidas_domingo/');
-      onValue(starCountRef, (snapshot) => {
+      const salidasDomingo = ref(database, 'salidas_domingo/');
+      onValue(salidasDomingo, (snapshot) => {
         const data = snapshot.val();
         events = data || [];
         events.forEach(d => {
