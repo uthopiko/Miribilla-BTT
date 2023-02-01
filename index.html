@@ -176,8 +176,8 @@
       const starCountRef = ref(database, 'salidas_domingo/');
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
-        events = data;
-        data.forEach(d => {
+        events = data || [];
+        events.forEach(d => {
           document.querySelector(`span[data-id="${d.id}"]`).setHTML(d.asistentes.length);
         });
       });
