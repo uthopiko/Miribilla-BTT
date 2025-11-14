@@ -89,7 +89,7 @@ async function run() {
       console.log(`📌 Fast-forward merge de ${br} en ${developBranch}...`);
 
       await exec.exec("git", ["checkout", developBranch]);
-      await exec.exec("git", ["merge", "--no-commit", "--no-ff", br]);
+      await exec.exec("git", ["merge", "--no-ff", br]);
     }
 
     await exec.exec("git", ["push", "origin", developBranch]);
