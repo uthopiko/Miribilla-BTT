@@ -1,0 +1,8 @@
+{
+    "name": "auto-merge",
+    "version": "1.0.0",
+    "dependencies": {
+      "@actions/core": "^1.12.0",
+      "@actions/github": "^6.1.1"
+    }
+  }
