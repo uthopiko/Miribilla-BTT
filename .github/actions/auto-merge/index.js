@@ -60,47 +60,51 @@ async function run() {
 
     // 3️⃣ Merge real en develop y rebase de las siguientes
     console.log("🛠 Configurando identidad Git...");
-    const exec = require("child_process").execSync;
-    exec("git", ["config", "--global", "user.name", "github-actions"]);
-    exec(" git", [
+    await exec.exec("git", [
+      "config",
+      "--global",
+      "user.name",
+      "github-actions",
+    ]);
+    await exec.exec("git", [
       "config",
       "--global",
       "user.email",
       "github-actions@github.com",
     ]);
+
     console.log(`🔀 Merge secuencial en ${developBranch}`);
-    exec(`git fetch origin`, { stdio: "inherit" });
-    exec(`git checkout ${developBranch}`, { stdio: "inherit" });
+
+    await exec.exec("git", ["fetch", "origin"]);
+    await exec.exec("git", ["checkout", developBranch]);
 
     for (let i = 0; i < branches.length; i++) {
       const br = branches[i];
       console.log(`Mergeando ${br} en ${developBranch}`);
-      exec(`git merge --no-ff origin/${br}`, { stdio: "inherit" });
-      exec(`git push origin ${developBranch}`, { stdio: "inherit" });
+
+      await exec.exec("git", ["merge", "--no-ff", `origin/${br}`]);
+      await exec.exec("git", ["push", "origin", developBranch]);
 
       // Rebase del resto
       for (let j = i + 1; j < branches.length; j++) {
         const next = branches[j];
         console.log(`Rebaseando ${next} sobre ${developBranch}`);
-        exec(`git checkout ${next}`, { stdio: "inherit" });
-        exec(`git rebase ${developBranch}`, { stdio: "inherit" });
-        exec(`git push origin ${next} --force-with-lease`, {
-          stdio: "inherit",
-        });
+
+        await exec.exec("git", ["checkout", next]);
+        await exec.exec("git", ["rebase", developBranch]);
+        await exec.exec("git", ["push", "origin", next, "--force-with-lease"]);
       }
 
-      exec(`git checkout ${developBranch}`, { stdio: "inherit" });
+      await exec.exec("git", ["checkout", developBranch]);
     }
 
-    // 4️⃣ Crear snapshot
     const tagName = `snapshot-${
       new Date().toISOString().replace(/[-:]/g, "").split(".")[0]
     }`;
     console.log(`🏷️ Creando snapshot: ${tagName}`);
-    await exec(`git tag ${tagName}`, { stdio: "inherit" });
-    awaitexec(`git push origin ${tagName}`, { stdio: "inherit" });
 
-    console.log("🎉 Merge y snapshot completados correctamente");
+    await exec.exec("git", ["tag", tagName]);
+    await exec.exec("git", ["push", "origin", tagName]);
   } catch (error) {
     core.setFailed(error.message);
   }
