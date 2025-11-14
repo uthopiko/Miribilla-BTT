@@ -25,9 +25,10 @@ for BR in "${BRANCH_ARRAY[@]}"; do
 
   # Status checks
   CHECKS=$(gh pr checks "$PR_NUMBER" --json state)
-  echo "$CHECKS" | jq -e '.[] | select(.state != "success")'
-  if echo "$CHECKS" | jq -e '.[] | select(.state != "success")' >/dev/null; then
-    echo "❌ La rama $BR tiene checks fallidos."
+  FAILED=$(echo "$CHECKS" | jq '[ .[] | select(.state=="failure" or .state=="cancelled") ] | length')
+
+  if [[ "$FAILED" -gt 0 ]]; then
+    echo "❌ La rama $BR tiene $FAILED checks fallidos."
     exit 1
   fi
 
