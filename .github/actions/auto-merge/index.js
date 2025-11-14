@@ -8,7 +8,7 @@ async function run() {
         if (!token) throw new Error("GITHUB_TOKEN no definido");
 
         const branchesInput = core.getInput('branches', { required: true });
-        const developBranch = core.getInput('develop-branch') || 'develop';
+        const developBranch = core.getInput('develop-branch') || 'main';
         const branches = branchesInput.split(',').map(b => b.trim());
 
         const octokit = github.getOctokit(token);
