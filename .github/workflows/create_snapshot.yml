@@ -14,7 +14,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+      - name: Setup Node for local action
+        run: |
+          cd ./.github/actions/auto-merge
+          npm install
       - name: Run Auto Merge Action
         uses: ./.github/actions/auto-merge
         with:
