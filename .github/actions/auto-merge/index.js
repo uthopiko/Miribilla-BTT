@@ -76,13 +76,12 @@ async function run() {
 
     await exec.exec("git", ["fetch", "origin"]);
     await exec.exec("git", ["checkout", developBranch]);
-    await exec.exec("git", ["pull", "origin", developBranch]);
 
     for (const br of branches) {
       console.log(`🔄 Rebasando ${br} sobre ${developBranch}...`);
 
       // Rama temporal para rebase
-      await exec.exec("git", ["checkout", "-b", `tmp-${br}`, `origin/${br}`]);
+      await exec.exec("git", ["checkout", br]);
 
       // Rebase limpio
       await exec.exec("git", ["rebase", developBranch]);
@@ -90,10 +89,10 @@ async function run() {
       console.log(`📌 Fast-forward merge de ${br} en ${developBranch}...`);
 
       await exec.exec("git", ["checkout", developBranch]);
-      await exec.exec("git", ["merge", "--no-commit", "--no-ff", `tmp-${br}`]);
-
-      await exec.exec("git", ["push", "origin", developBranch]);
+      await exec.exec("git", ["merge", "--no-commit", "--no-ff", br]);
     }
+
+    await exec.exec("git", ["push", "origin", developBranch]);
 
     // 4️⃣ Snapshot
     const tagName = `snapshot-${
