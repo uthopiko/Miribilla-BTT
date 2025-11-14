@@ -16,7 +16,7 @@ async function run() {
 
     console.log("Ramas a procesar:", branches);
 
-    // 1️⃣ Validar PRs y checks
+    // 1️⃣ Validación de PRs + checks
     for (const br of branches) {
       console.log(`Validando PR para ${br}...`);
 
@@ -32,7 +32,7 @@ async function run() {
 
       const pr = prs.data[0];
 
-      // Validar approvals
+      // Aprobaciones
       const reviews = await octokit.rest.pulls.listReviews({
         owner,
         repo,
@@ -41,24 +41,22 @@ async function run() {
       const approved = reviews.data.some((r) => r.state === "APPROVED");
       if (!approved) throw new Error(`La rama ${br} no tiene PR aprobado`);
 
-      // Validar checks
+      // Checks
       const combinedStatus = await octokit.rest.repos.getCombinedStatusForRef({
         owner,
         repo,
         ref: pr.head.sha,
       });
 
-      if (combinedStatus.data.state === "failure") {
+      if (combinedStatus.data.state === "failure")
         throw new Error(`La rama ${br} tiene checks fallidos`);
-      }
 
       console.log(`✔ PR y checks OK para ${br}`);
     }
 
-    // 2️⃣ Dry-run secuencial (simulación)
     console.log("✅ Dry-run completado (simulación, todo OK)");
 
-    // 3️⃣ Merge real en develop y rebase de las siguientes
+    // 2️⃣ Configurar identidad Git
     console.log("🛠 Configurando identidad Git...");
     await exec.exec("git", [
       "config",
@@ -73,31 +71,31 @@ async function run() {
       "github-actions@github.com",
     ]);
 
-    console.log(`🔀 Merge secuencial en ${developBranch}`);
+    // 3️⃣ Rebase + fast-forward merge limpio en develop
+    console.log(`🔀 Integración lineal en ${developBranch}`);
 
     await exec.exec("git", ["fetch", "origin"]);
     await exec.exec("git", ["checkout", developBranch]);
+    await exec.exec("git", ["pull", "origin", developBranch]);
 
-    for (let i = 0; i < branches.length; i++) {
-      const br = branches[i];
-      console.log(`Mergeando ${br} en ${developBranch}`);
+    for (const br of branches) {
+      console.log(`🔄 Rebasando ${br} sobre ${developBranch}...`);
 
-      await exec.exec("git", ["merge", "--no-ff", `origin/${br}`]);
-      await exec.exec("git", ["push", "origin", developBranch]);
+      // Rama temporal para rebase
+      await exec.exec("git", ["checkout", "-b", `tmp-${br}`, `origin/${br}`]);
 
-      // Rebase del resto
-      for (let j = i + 1; j < branches.length; j++) {
-        const next = branches[j];
-        console.log(`Rebaseando ${next} sobre ${developBranch}`);
+      // Rebase limpio
+      await exec.exec("git", ["rebase", developBranch]);
 
-        await exec.exec("git", ["checkout", next]);
-        await exec.exec("git", ["rebase", developBranch]);
-        await exec.exec("git", ["push", "origin", next, "--force-with-lease"]);
-      }
+      console.log(`📌 Fast-forward merge de ${br} en ${developBranch}...`);
 
       await exec.exec("git", ["checkout", developBranch]);
+      await exec.exec("git", ["merge", "--ff-only", `tmp-${br}`]);
+
+      await exec.exec("git", ["push", "origin", developBranch]);
     }
 
+    // 4️⃣ Snapshot
     const tagName = `snapshot-${
       new Date().toISOString().replace(/[-:]/g, "").split(".")[0]
     }`;
