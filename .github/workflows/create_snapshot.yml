@@ -32,4 +32,4 @@ jobs:
           BRANCHES: ${{ github.event.inputs.branches }}
         run: |
           chmod +x scripts/validate-and-merge.sh
-          ./scripts/validate-and-merge.sh
+          ./scripts/create_snapshot.sh
