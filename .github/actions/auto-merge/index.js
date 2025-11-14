@@ -86,10 +86,25 @@ async function run() {
       // Rebase limpio
       await exec.exec("git", ["rebase", developBranch]);
 
-      console.log(`📌 Fast-forward merge de ${br} en ${developBranch}...`);
+      const prs = await octokit.rest.pulls.list({
+        owner,
+        repo,
+        head: `${owner}:${br}`,
+        state: "open",
+      });
 
-      await exec.exec("git", ["checkout", developBranch]);
-      await exec.exec("git", ["merge", "--no-ff", br]);
+      if (prs.data.length === 0)
+        throw new Error(`No hay PR abierto para ${br}`);
+
+      const pr = prs.data[0];
+
+      // Merge commit estándar de GitHub (cierra el PR)
+      await octokit.rest.pulls.merge({
+        owner,
+        repo,
+        pull_number: pr.number,
+        merge_method: "merge", // mantiene merge commit
+      });
     }
 
     await exec.exec("git", ["push", "origin", developBranch]);
