@@ -31,5 +31,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCHES: ${{ github.event.inputs.branches }}
         run: |
-          chmod +x scripts/create_snapshot.sh
-          ./scripts/create_snapshot.sh
+          chmod +x scripts/rebase_and_merge.sh
+          ./scripts/rebase_and_merge.sh
