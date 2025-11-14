@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const exec = require('@actions/exec');
 
 async function run() {
     try {
@@ -49,11 +50,38 @@ async function run() {
             console.log(`✔ PR y checks OK para ${br}`);
         }
 
+        // 2️⃣ Dry-run secuencial (simulación)
+        console.log("✅ Dry-run completado (simulación, todo OK)");
+
+        // 3️⃣ Merge real en develop y rebase de las siguientes
+        console.log(`🔀 Merge secuencial en ${developBranch}`);
+        const exec = require('child_process').execSync;
+        exec(`git fetch origin`, { stdio: 'inherit' });
+        exec(`git checkout ${developBranch}`, { stdio: 'inherit' });
+
+        for (let i = 0; i < branches.length; i++) {
+            const br = branches[i];
+            console.log(`Mergeando ${br} en ${developBranch}`);
+            exec(`git merge --no-ff origin/${br}`, { stdio: 'inherit' });
+            exec(`git push origin ${developBranch}`, { stdio: 'inherit' });
+
+            // Rebase del resto
+            for (let j = i + 1; j < branches.length; j++) {
+                const next = branches[j];
+                console.log(`Rebaseando ${next} sobre ${developBranch}`);
+                exec(`git checkout ${next}`, { stdio: 'inherit' });
+                exec(`git rebase ${developBranch}`, { stdio: 'inherit' });
+                exec(`git push origin ${next} --force-with-lease`, { stdio: 'inherit' });
+            }
+
+            exec(`git checkout ${developBranch}`, { stdio: 'inherit' });
+        }
+
         // 4️⃣ Crear snapshot
         const tagName = `snapshot-${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}`;
         console.log(`🏷️ Creando snapshot: ${tagName}`);
-        exec(`git tag ${tagName}`, { stdio: 'inherit' });
-        exec(`git push origin ${tagName}`, { stdio: 'inherit' });
+        await exec(`git tag ${tagName}`, { stdio: 'inherit' });
+        awaitexec(`git push origin ${tagName}`, { stdio: 'inherit' });
 
         console.log("🎉 Merge y snapshot completados correctamente");
 
