@@ -60,13 +60,8 @@ async function run() {
 
     // 3️⃣ Merge real en develop y rebase de las siguientes
     console.log("🛠 Configurando identidad Git...");
-    await exec.exec("git", [
-      "config",
-      "--global",
-      "user.name",
-      "github-actions",
-    ]);
-    await exec.exec("git", [
+    exec("git", ["config", "--global", "user.name", "github-actions"]);
+    exec(" git", [
       "config",
       "--global",
       "user.email",
