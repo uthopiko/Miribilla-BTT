@@ -1,0 +1,23 @@
+name: Auto Merge Branches
+description: "Merge sequential branches into develop with checks, dry-run and snapshot"
+author: Your Name
+runs:
+  using: "node16"
+  main: "index.js"
+
+inputs:
+  branches:
+    description: "Lista de ramas separadas por comas"
+    required: true
+  develop-branch:
+    description: "Nombre de la rama develop"
+    required: false
+    default: "develop"
+
+permissions:
+  contents: write
+  pull-requests: read
+
+branding:
+  icon: "git-merge"
+  color: "blue"
