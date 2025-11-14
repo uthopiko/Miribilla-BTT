@@ -1,35 +1,23 @@
-name: Auto merge branches into develop
-
+name: Auto Merge Workflow
 on:
   workflow_dispatch:
     inputs:
       branches:
         description: "Lista de ramas separadas por comas"
         required: true
-        type: string
 
 jobs:
-  auto-merge:
+  merge:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Instalar jq
-        run: sudo apt-get install -y jq
-
-      - name: Configurar Git
-        run: |
-          git config user.name "CI Auto Merge"
-          git config user.email "ci@example.com"
-
-      - name: Ejecutar script de validación y merge
+      - name: Run Auto Merge Action
+        uses: ./.github/actions/auto-merge
+        with:
+          branches: ${{ github.event.inputs.branches }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCHES: ${{ github.event.inputs.branches }}
-        run: |
-          chmod +x scripts/rebase_and_merge.sh
-          ./scripts/rebase_and_merge.sh
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
