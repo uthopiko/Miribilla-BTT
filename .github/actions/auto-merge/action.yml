@@ -12,7 +12,7 @@ inputs:
   develop-branch:
     description: "Nombre de la rama develop"
     required: false
-    default: "develop"
+    default: "main"
 
 permissions:
   contents: write
