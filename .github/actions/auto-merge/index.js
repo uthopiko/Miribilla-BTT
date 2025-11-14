@@ -60,6 +60,7 @@ async function run() {
 
     // 3️⃣ Merge real en develop y rebase de las siguientes
     console.log("🛠 Configurando identidad Git...");
+    const exec = require("child_process").execSync;
     exec("git", ["config", "--global", "user.name", "github-actions"]);
     exec(" git", [
       "config",
@@ -68,7 +69,6 @@ async function run() {
       "github-actions@github.com",
     ]);
     console.log(`🔀 Merge secuencial en ${developBranch}`);
-    const exec = require("child_process").execSync;
     exec(`git fetch origin`, { stdio: "inherit" });
     exec(`git checkout ${developBranch}`, { stdio: "inherit" });
 
