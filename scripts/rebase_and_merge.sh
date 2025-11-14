@@ -24,8 +24,8 @@ for BR in "${BRANCH_ARRAY[@]}"; do
   PR_NUMBER=$(echo "$PR_DATA" | jq -r '.[0].number')
 
   # Status checks
-  CHECKS=$(gh pr checks "$PR_NUMBER" --json conclusion)
-  if echo "$CHECKS" | jq -e '.[] | select(.conclusion != "success")' >/dev/null; then
+  CHECKS=$(gh pr checks "$PR_NUMBER" --json state)
+  if echo "$CHECKS" | jq -e '.[] | select(.state != "success")' >/dev/null; then
     echo "❌ La rama $BR tiene checks fallidos."
     exit 1
   fi
