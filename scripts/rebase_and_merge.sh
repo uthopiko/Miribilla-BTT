@@ -10,35 +10,35 @@ printf '%s\n' "${BRANCH_ARRAY[@]}"
 ########################################
 # 1. VALIDAR CHECKS
 ########################################
-# echo "Validando checks obligatorios…"
+echo "Validando checks obligatorios…"
 
-# for BR in "${BRANCH_ARRAY[@]}"; do
-#   echo "Validando $BR…"
+for BR in "${BRANCH_ARRAY[@]}"; do
+  echo "Validando $BR…"
 
-#   PR_DATA=$(gh pr list --head "$BR" --json number,url,state)
-#   if [[ $(echo "$PR_DATA" | jq length) -eq 0 ]]; then
-#     echo "❌ La rama $BR no tiene un PR abierto."
-#     exit 1
-#   fi
+  PR_DATA=$(gh pr list --head "$BR" --json number,url,state)
+  if [[ $(echo "$PR_DATA" | jq length) -eq 0 ]]; then
+    echo "❌ La rama $BR no tiene un PR abierto."
+    exit 1
+  fi
 
-#   PR_NUMBER=$(echo "$PR_DATA" | jq -r '.[0].number')
+  PR_NUMBER=$(echo "$PR_DATA" | jq -r '.[0].number')
 
-#   # Status checks
-#   CHECKS=$(gh pr checks "$PR_NUMBER" --json conclusion)
-#   if echo "$CHECKS" | jq -e '.[] | select(.conclusion != "success")' >/dev/null; then
-#     echo "❌ La rama $BR tiene checks fallidos."
-#     exit 1
-#   fi
+  # Status checks
+  CHECKS=$(gh pr checks "$PR_NUMBER" --json conclusion)
+  if echo "$CHECKS" | jq -e '.[] | select(.conclusion != "success")' >/dev/null; then
+    echo "❌ La rama $BR tiene checks fallidos."
+    exit 1
+  fi
 
-#   # Approvals
-#   APPROVED=$(gh pr view "$PR_NUMBER" --json reviews | jq -e '.reviews | map(select(.state == "APPROVED")) | length > 0')
-#   if [[ $? -ne 0 ]]; then
-#     echo "❌ La rama $BR no tiene approvals."
-#     exit 1
-#   fi
+  # Approvals
+  APPROVED=$(gh pr view "$PR_NUMBER" --json reviews | jq -e '.reviews | map(select(.state == "APPROVED")) | length > 0')
+  if [[ $? -ne 0 ]]; then
+    echo "❌ La rama $BR no tiene approvals."
+    exit 1
+  fi
 
-#   echo "✔️ $BR OK"
-# done
+  echo "✔️ $BR OK"
+done
 
 # ########################################
 # # 2. DRY RUN
